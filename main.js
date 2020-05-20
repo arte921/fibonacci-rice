@@ -21,7 +21,7 @@ let i = 2
 
 var img = new Image()
 img.onload = main
-img.src = https://upload.wikimedia.org/wikipedia/commons/8/80/NYC_wideangle_south_from_Top_of_the_Rock.jpg
+img.src = 'https://upload.wikimedia.org/wikipedia/commons/8/80/NYC_wideangle_south_from_Top_of_the_Rock.jpg'
 
 function main(){
 	ctx.drawImage(img, 0,0, canvas.width, canvas.height)

@@ -1,0 +1,21 @@
+	switch(i % 4){
+
+		case 0:
+			x += v
+			y -= t
+		break
+
+		case 1:
+			x -= t
+			y -= f
+		break
+
+		case 2:
+			x -= f
+		break
+
+		case 3:
+			y += v
+		break
+
+	}

@@ -21,7 +21,7 @@ let i = 2
 
 var img = new Image()
 img.onload = main
-img.src = 'https://cdn.discordapp.com/attachments/572855721520005146/709780363219566732/arctic-sunset.jpg'
+
 
 function main(){
 	ctx.drawImage(img, 0,0, canvas.width, canvas.height)

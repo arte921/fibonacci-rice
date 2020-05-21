@@ -3,32 +3,61 @@ let ctx = canvas.getContext("2d")
 let width = canvas.width
 let height = canvas.height
 
-let gs = 50
-let gaps = 20
-let transparency = 0.6
-let blur = 0
+let gaps = 5
+let sizemultiplier = 3
+let blur = 15
 
-let t = 8
-let v = 13
-let f = 21
+let t = 1
+let v = 0
+let f = 1
 
-let x = 900
-let y = 1300
+let x = width / 2 / sizemultiplier + 50
+let y = height / 2 / sizemultiplier + 50
 
 let i = 2
 
-//ctx.beginPath()
-
 var img = new Image()
+img.crossOrigin = "Anonymous"
 img.onload = main
 img.src = 'https://upload.wikimedia.org/wikipedia/commons/8/80/NYC_wideangle_south_from_Top_of_the_Rock.jpg'
 
+function draw(x,y,f){
+
+	let xs = x * sizemultiplier
+	let ys = y * sizemultiplier
+	let fs = f * sizemultiplier
+
+	for(let h = xs + gaps; h <= xs + fs - gaps; h++){
+		for(let v = ys + gaps; v <= ys + fs - gaps; v++){
+			let otherpx = canvas.getContext('2d').getImageData(h - Math.floor(blur / 2), v - Math.floor(blur / 2), blur, blur).data
+
+			let r = otherpx.filter((_, index) => index % 4 == 0).reduce((accumulator, value) => accumulator + value) / Math.pow(blur, 2)
+			let g = otherpx.filter((_, index) => index % 4 == 1).reduce((accumulator, value) => accumulator + value) / Math.pow(blur, 2)
+			let b = otherpx.filter((_, index) => index % 4 == 2).reduce((accumulator, value) => accumulator + value) / Math.pow(blur, 2)
+			let a = otherpx.filter((_, index) => index % 4 == 3).reduce((accumulator, value) => accumulator + value) / Math.pow(blur, 2)
+			
+			ctx.fillStyle = `rgba(${r},${g},${b},${a})`
+			ctx.fillRect(h,v,1,1)
+		}
+	}
+
+	ctx.fillStyle = 'rgba(255,255,255,1)'
+	ctx.filter = 'none'
+	ctx.font = `${fs/3}px monospace`
+	ctx.textAlign = 'center'
+	ctx.fillText(f, xs + fs / 2, ys + fs / 2 + fs / 6)
+}
+
 function main(){
-	ctx.drawImage(img, 0,0, canvas.width, canvas.height)
 
-	
+	ctx.drawImage(img, 0,0, canvas.width, canvas.height)	
 
-	while(f < width){
+	while(i < 14){
+
+		draw(x,y,f)
+
+		t = v
+		v = f
 
 		f = v + t
 
@@ -54,32 +83,7 @@ function main(){
 
 		}
 
-		t = v
-		v = f
-
 		i++
-
-		ctx.fillStyle = `rgba(${gs}, ${gs}, ${gs}, ${transparency})`
-		ctx.filter = `blur(${blur}px)`
-		ctx.shadowBlur = blur
-		ctx.shadowOffsetX = 0
-		ctx.shadowOffsetY = 0
-		ctx.shadowColor = `rgb(${gs}, ${gs}, ${gs}`
-
-		ctx.fillRect(x + gaps, y + gaps, f - gaps, f - gaps)
-
-		ctx.fillStyle = 'rgba(255,255,255,1)'
-		ctx.filter = 'none'
-		ctx.font = `${t/3}px monospace`
-		ctx.textAlign = 'center'
-		ctx.fillText(t, x + f / 2, y + f / 2 + t / 6)
-
-	/*
-		let g = i % 4
-
-		console.log({g,x,y,f,v,t})*/
-
-	//ctx.stroke()
 
 	}
 }

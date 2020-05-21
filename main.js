@@ -4,17 +4,17 @@ let width = canvas.width
 let height = canvas.height
 
 let gaps = 5
-let sizemultiplier = 3
-let blur = 15
+let sizemultiplier = 15
+let blur = 3
 
 let t = 1
 let v = 0
 let f = 1
 
-let x = width / 2 / sizemultiplier + 50
-let y = height / 2 / sizemultiplier + 50
+let x = (width / 2 + 400) / sizemultiplier
+let y = (height / 2 + 150) / sizemultiplier
 
-let i = 2
+let i = 0
 
 var img = new Image()
 img.crossOrigin = "Anonymous"
@@ -29,14 +29,18 @@ function draw(x,y,f){
 
 	for(let h = xs + gaps; h <= xs + fs - gaps; h++){
 		for(let v = ys + gaps; v <= ys + fs - gaps; v++){
-			let otherpx = canvas.getContext('2d').getImageData(h - Math.floor(blur / 2), v - Math.floor(blur / 2), blur, blur).data
+			let otherpx
+			try{
+				otherpx = canvas.getContext('2d').getImageData(h - Math.floor(blur / 2), v - Math.floor(blur / 2), blur, blur).data
+			}catch{}
+			
 
 			let r = otherpx.filter((_, index) => index % 4 == 0).reduce((accumulator, value) => accumulator + value) / Math.pow(blur, 2)
 			let g = otherpx.filter((_, index) => index % 4 == 1).reduce((accumulator, value) => accumulator + value) / Math.pow(blur, 2)
 			let b = otherpx.filter((_, index) => index % 4 == 2).reduce((accumulator, value) => accumulator + value) / Math.pow(blur, 2)
-			let a = otherpx.filter((_, index) => index % 4 == 3).reduce((accumulator, value) => accumulator + value) / Math.pow(blur, 2)
+			//let a = otherpx.filter((_, index) => index % 4 == 3).reduce((accumulator, value) => accumulator + value) / Math.pow(blur, 2)
 			
-			ctx.fillStyle = `rgba(${r},${g},${b},${a})`
+			ctx.fillStyle = `rgb(${r},${g},${b})`
 			ctx.fillRect(h,v,1,1)
 		}
 	}
@@ -52,7 +56,7 @@ function main(){
 
 	ctx.drawImage(img, 0,0, canvas.width, canvas.height)	
 
-	while(i < 14){
+	while(i < 10){
 
 		draw(x,y,f)
 
